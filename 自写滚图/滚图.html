@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>切换图</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .switchbox {
+            position: relative;
+        }
+
+        .switchbox a, .switchbox img {
+            display: inline-block;
+        }
+
+        .switchbox ul {
+            list-style-type: none;
+        }
+
+        .imagebox > li > a > img {
+            width: 400px;
+            height: 100%;
+        }
+
+        .switchbox {
+            margin: 10% 20%;
+            width: 400px;
+            height: 250px;
+            border: 1px solid red;
+            overflow: hidden;
+        }
+
+        .imagebox {
+            position: relative;
+            left: -400px;
+            height: 100%;
+            width: 2400px;
+        }
+
+        .imagebox > li {
+            float: left;
+        }
+
+        .numbox, .tbox {
+            position: absolute;
+        }
+
+        .numbox li {
+            float: left;
+            height: 18px;
+            line-height: 18px;
+            width: 18px;
+            text-align: center;
+            background: grey;
+            color: white;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .numbox {
+            border-bottom: 10px;
+            z-index: 5;
+            height: 18px;
+            bottom: 18px;
+            left: 30%;
+            cursor: pointer;
+        }
+
+        .numbox > :first-child {
+            background: red;
+        }
+
+        .tbox {
+            top: 40%;
+            font-size: 30px;
+            height: 40px;
+            line-height: 40px;
+            width: 25px;
+            background: grey;
+            text-align: center;
+            cursor: pointer;
+            opacity: 0.3;
+            font-weight: bolder;
+            color: white;
+        }
+
+        .switchbox:hover .tbox {
+            opacity: 1;
+        }
+
+        .leftbox {
+            left: 0;
+        }
+
+        .rightbox {
+            right: 0;
+        }
+    </style>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script>
+        $(function () {
+            var switchbox = $('.switchbox');
+           var time = setInterval('AutoChange()', 2000);
+            switchbox.mouseover(function () {//鼠标悬浮定时器停止
+                if (time != null) {
+                    clearInterval(time);
+                    time = null;
+                }
+            });
+            switchbox.mouseout(function () {//鼠标离开重启定时器
+                if (time == null) {
+                    time = setInterval('AutoChange()', 2000);
+                }
+            });
+            $('.numbox li').mouseover(function () {//点击数字 图片改变
+                var num = $(this).attr('name');
+                numbox1(num);
+            });
+            index = $('.imagebox').attr('name');
+            index = parseInt(index);
+            $('.leftbox').click(function () {//左点击 改变图片
+                if (index == 0) {
+                    index = $('.numbox li').length;
+                }
+                index = index - 1;
+                common();
+            });
+            $('.rightbox').click(function () {//右点击 改变图片
+                if (index == $('.numbox li').length - 1)
+                    index = -1;
+                index = index + 1;
+                common();
+            });
+
+        });
+        function numbox1(num) {
+            index = num;
+            index = parseInt(index);
+            common();
+        }
+        function AutoChange() {//定时器 自动变化图片
+            index = $('.imagebox').attr('name');
+            index = parseInt(index);
+            if (index == $('.numbox li').length - 1)
+                index = -1;
+            index += 1;
+            common();
+        }
+        function common() {//执行函数图片移动 以上每个事件相同部分
+           var left0 = (-400) * (index+1) + 'px';
+            $('.imagebox').attr('name', index);
+            //$('.imagebox').slideUp();
+            for (i = 0; i < $('.imagebox li').length; i++) {
+                if (i == index) {
+                    if(i==0){
+                       $('.imagebox').animate({left:'-0px'},0);
+                    }
+                    $('.imagebox').animate({left:left0},800);
+                    $('.numbox li')[i].style.backgroundColor = 'red';
+                } else {
+                    //$($('.imagebox li')[i]).slideDown(30);
+                    $('.numbox li')[i].style.backgroundColor = 'grey';
+                }
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div class="switchbox">
+    <ul class="imagebox" name="0">
+        <li><a href="#"><img src="img/5.jpg" alt=""></a></li>
+        <li><a href="#"><img src="img/1.jpg" alt=""></a></li>
+        <li><a href="#"><img src="img/2.jpg" alt=""></a></li>
+        <li><a href="#"><img src="img/3.jpg" alt=""></a></li>
+        <li><a href="#"><img src="img/4.jpg" alt=""></a></li>
+        <li><a href="#"><img src="img/5.jpg" alt=""></a></li>
+
+    </ul>
+    <ul class="numbox">
+        <li name="0">1</li>
+        <li name="1">2</li>
+        <li name="2">3</li>
+        <li name="3">4</li>
+        <li name="4">5</li>
+    </ul>
+    <p class="leftbox tbox">&lt;</p>
+    <p class="rightbox tbox">&gt;</p>
+</div>
+</body>
+</html>
